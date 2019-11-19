@@ -6,14 +6,15 @@
 // <summary>Provides consistent context information between the client</summary>
 //-----------------------------------------------------------------------
 using System;
-using System.Threading;
 using System.Security.Principal;
-using System.Collections.Specialized;
 #if !NETSTANDARD2_0
 using System.Web;
 #endif
 using Csla.Core;
 using Csla.Configuration;
+#if !NET40 && !NET45
+using Microsoft.Extensions.DependencyInjection;
+#endif
 
 namespace Csla
 {
@@ -23,7 +24,7 @@ namespace Csla
   /// </summary>
   public static class ApplicationContext
   { 
-    #region Context Manager
+#region Context Manager
 
     private static IContextManager _contextManager;
 
@@ -41,23 +42,14 @@ namespace Csla
       _VersionRoutingTag = null;
     }
 
-  private static IContextManager _webContextManager;
-#if !NETSTANDARD2_0
-    private static Type _webManagerType;
-#endif
+    private static IContextManager _webContextManager;
+    private static readonly Type _webManagerType;
 
     static ApplicationContext()
     {
       Type _contextManagerType = null;
-
-#if !NETSTANDARD2_0
-      _webManagerType = Type.GetType("Csla.Web.ApplicationContextManager, Csla.Web");
-      if (_webManagerType != null)
-        WebContextManager = (IContextManager)Activator.CreateInstance(_webManagerType);
-
       if (_contextManagerType == null)
         _contextManagerType = Type.GetType("Csla.Windows.ApplicationContextManager, Csla.Windows");
-#endif
 
       if (_contextManagerType == null)
         _contextManagerType = Type.GetType("Csla.Xaml.ApplicationContextManager, Csla.Xaml");
@@ -67,6 +59,13 @@ namespace Csla
 
       if (_contextManager == null)
         _contextManager = new ApplicationContextManager();
+
+      if (_webManagerType == null)
+      {
+        _webManagerType = Type.GetType("Csla.Web.ApplicationContextManager, Csla.Web");
+        if (_webManagerType != null)
+          WebContextManager = (IContextManager)Activator.CreateInstance(_webManagerType);
+      }
     }
 
     /// <summary>
@@ -84,7 +83,7 @@ namespace Csla
     }
 
     /// <summary>
-    /// Gets the context manager responsible
+    /// Gets or sets the context manager responsible
     /// for storing user and context information for
     /// the application.
     /// </summary>
@@ -105,9 +104,9 @@ namespace Csla
       set { _contextManager = value; }
     }
 
-    #endregion
+#endregion
 
-    #region User
+#region User
 
     /// <summary>
     /// Get or set the current <see cref="IPrincipal" />
@@ -125,9 +124,9 @@ namespace Csla
       set { ContextManager.SetUser(value); }
     }
 
-    #endregion
+#endregion
 
-    #region LocalContext
+#region LocalContext
 
     /// <summary>
     /// Returns the application-specific context data that
@@ -156,11 +155,11 @@ namespace Csla
       }
     }
 
-    #endregion
+#endregion
 
-    #region Client/Global Context
+#region Client/Global Context
 
-    private static object _syncContext = new object();
+    private static readonly object _syncContext = new object();
 
     /// <summary>
     /// Returns the application-specific context data provided
@@ -244,9 +243,9 @@ namespace Csla
       ContextManager.SetLocalContext(null);
     }
 
-    #endregion
+#endregion
 
-    #region Settings
+#region Settings
 
     /// <summary>
     /// Gets or sets a value indicating whether the app
@@ -771,7 +770,7 @@ namespace Csla
 
 #endregion
 
-    #region Logical Execution Location
+#region Logical Execution Location
     /// <summary>
     /// Enum representing the logical execution location
     /// The setting is set to server when server is execting
@@ -814,144 +813,71 @@ namespace Csla
     {
       LocalContext["__logicalExecutionLocation"] = location;
     }
-#endregion
+    #endregion
 
-#region Default context manager
+#region ServiceProvider
+
+#if !NET40 && !NET45
+    private static IServiceCollection _serviceCollection;
+
+    internal static void SetServiceCollection(IServiceCollection serviceCollection)
+    {
+      _serviceCollection = serviceCollection;
+    }
 
     /// <summary>
-    /// Default context manager for the user property
-    /// and local/client/global context dictionaries.
+    /// Sets the default service provider for this application.
     /// </summary>
-    public class ApplicationContextManager : IContextManager
+    public static IServiceProvider DefaultServiceProvider
     {
-#if NET40 || NET45
-      private const string _localContextName = "Csla.LocalContext";
-      private const string _clientContextName = "Csla.ClientContext";
-#else
-      private AsyncLocal<ContextDictionary> _localContext = new AsyncLocal<ContextDictionary>();
-      private AsyncLocal<ContextDictionary> _clientContext = new AsyncLocal<ContextDictionary>();
-#endif
-      private const string _globalContextName = "Csla.GlobalContext";
-
-      /// <summary>
-      /// Returns a value indicating whether the context is valid.
-      /// </summary>
-      public bool IsValid
+      internal get
       {
-        get { return true; }
-      }
-
-      /// <summary>
-      /// Gets the current user principal.
-      /// </summary>
-      /// <returns>The current user principal</returns>
-      public virtual IPrincipal GetUser()
-      {
-        IPrincipal result = Thread.CurrentPrincipal;
-        if (result == null)
+        var result = _contextManager.GetDefaultServiceProvider();
+        if (result == null && _serviceCollection != null)
         {
-          result = new Csla.Security.UnauthenticatedPrincipal();
-          SetUser(result);
+          result = _serviceCollection.BuildServiceProvider();
+          _serviceCollection = null;
+          DefaultServiceProvider = result;
         }
         return result;
       }
+      set => _contextManager.SetDefaultServiceProvider(value);
+    }
 
-      /// <summary>
-      /// Sets teh current user principal.
-      /// </summary>
-      /// <param name="principal">User principal value</param>
-      public virtual void SetUser(IPrincipal principal)
+    /// <summary>
+    /// Sets the service provider scope for this application context.
+    /// </summary>
+#pragma warning disable CS3003 // Type is not CLS-compliant
+    public static IServiceScope ServiceProviderScope
+#pragma warning restore CS3003 // Type is not CLS-compliant
+    {
+      internal get
       {
-        Thread.CurrentPrincipal = principal;
-      }
-
-      /// <summary>
-      /// Gets the local context dictionary.
-      /// </summary>
-      public ContextDictionary GetLocalContext()
-      {
-#if NET40 || NET45
-        LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_localContextName);
-        return (ContextDictionary)Thread.GetData(slot);
-#else
-        return _localContext.Value;
-#endif
-      }
-
-      /// <summary>
-      /// Sets the local context dictionary.
-      /// </summary>
-      /// <param name="localContext">Context dictionary</param>
-      public void SetLocalContext(ContextDictionary localContext)
-      {
-#if NET40 || NET45
-        LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_localContextName);
-        Thread.SetData(slot, localContext);
-#else
-        _localContext.Value = localContext;
-#endif
-      }
-
-      /// <summary>
-      /// Gets the client context dictionary.
-      /// </summary>
-      public ContextDictionary GetClientContext()
-      {
-#if NET40 || NET45 
-        if (ApplicationContext.ExecutionLocation == ExecutionLocations.Client)
+        var result = _contextManager.GetServiceProviderScope();
+        if (result == null && DefaultServiceProvider != null)
         {
-          return (ContextDictionary)AppDomain.CurrentDomain.GetData(_clientContextName);
+          result = DefaultServiceProvider.CreateScope();
+          ServiceProviderScope = result;
         }
+        return result;
+      }
+      set => _contextManager.SetServiceProviderScope(value);
+    }
+
+    /// <summary>
+    /// Gets the service provider scoped for this application context.
+    /// </summary>
+    internal static IServiceProvider ScopedServiceProvider
+    {
+      get
+      {
+        if (ServiceProviderScope != null)
+          return ServiceProviderScope.ServiceProvider;
         else
-        {
-          LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_clientContextName);
-          return (ContextDictionary)Thread.GetData(slot);
-        }
-#else
-        return _clientContext.Value;
-#endif
-      }
-
-      /// <summary>
-      /// Sets the client context dictionary.
-      /// </summary>
-      /// <param name="clientContext">Context dictionary</param>
-      public void SetClientContext(ContextDictionary clientContext)
-      {
-#if NET40 || NET45 
-        if (ApplicationContext.ExecutionLocation == ExecutionLocations.Client)
-        {
-          AppDomain.CurrentDomain.SetData(_clientContextName, clientContext);
-        }
-        else
-        {
-          LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_clientContextName);
-          Thread.SetData(slot, clientContext);
-        }
-#else
-        _clientContext.Value = clientContext;
-#endif
-      }
-
-      /// <summary>
-      /// Gets the global context dictionary.
-      /// </summary>
-      public ContextDictionary GetGlobalContext()
-      {
-        LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_globalContextName);
-        return (ContextDictionary)Thread.GetData(slot);
-      }
-
-      /// <summary>
-      /// Sets the global context dictionary.
-      /// </summary>
-      /// <param name="globalContext">Context dictionary</param>
-      public void SetGlobalContext(ContextDictionary globalContext)
-      {
-        LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_globalContextName);
-        Thread.SetData(slot, globalContext);
+          return null;
       }
     }
+#endif
 
 #endregion
   }

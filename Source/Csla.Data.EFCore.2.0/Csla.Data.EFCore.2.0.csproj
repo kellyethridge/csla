@@ -5,7 +5,7 @@
     <AssemblyName>Csla.Data.EntityFrameworkCore</AssemblyName>
     <RootNamespace>Csla.Data.EntityFrameworkCore</RootNamespace>
     <PackageId>Csla.Data.EntityFrameworkCore</PackageId>
-    <Version>5.0.0.0</Version>
+    <Version>5.1.0.0</Version>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -15,11 +15,11 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <PackageLicenseUrl>https://github.com/MarimerLLC/csla/blob/master/license.md</PackageLicenseUrl>
-    <PackageProjectUrl>http://cslanet.com</PackageProjectUrl>
+    <PackageProjectUrl>https://cslanet.com</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MarimerLLC/csla</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>CslaKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Csla.NetStandard2.0\CslaKey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
@@ -31,10 +31,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Csla.NetStandard2.0\Csla.NetStandard2.0.csproj" />
   </ItemGroup>
+
+  <Import Project="..\Csla.Data.EFCore.Shared\Csla.Data.EFCore.Shared.projitems" Label="Shared" />
 
 </Project>

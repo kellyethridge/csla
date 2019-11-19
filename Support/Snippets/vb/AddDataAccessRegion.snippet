@@ -4,7 +4,7 @@
     <Header>
       <Title>Insert data access region</Title>
       <Author>Rockford Lhotka</Author>
-      <Description>Insert CSLA .NET data access region.</Description>
+      <Description>Insert CSLA .NET server-side dataportal methods.</Description>
       <HelpUrl />
       <SnippetTypes />
       <Keywords />
@@ -18,7 +18,7 @@
           <ID>IdName</ID>
           <Type />
           <ToolTip>Replace with the id property info object.</ToolTip>
-          <Default>IdProperty</Default>
+          <Default>Id</Default>
           <Function />
         </Literal>
         <Literal Editable="true" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
@@ -28,45 +28,40 @@
           <Default>Integer</Default>
           <Function />
         </Literal>
-        <Literal Editable="true" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
-          <ID>ObjectType</ID>
-          <Type />
-          <ToolTip>Replace with the business object type.</ToolTip>
-          <Default>BusinessObject</Default>
-          <Function />
-        </Literal>
-        <Literal Editable="true" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
-          <ID>IdProperty</ID>
-          <Type />
-          <ToolTip>Replace with the id property info name.</ToolTip>
-          <Default>IdProperty</Default>
-          <Function />
-        </Literal>
       </Declarations>
-      <Code Language="VB" Delimiter="$"><![CDATA[#Region " Data Access "
-
-Private Overloads Sub DataPortal_Fetch(ByVal criteria As SingleCriteria(Of $ObjectType$, $IdType$))
-  ' TODO: load values into object
-  $end$
+      <Code Language="VB" Delimiter="$">
+    <![CDATA[
+<Create> _
+Private Sub Create()
+  ' TODO: initialize object values
+  BusinessRules.CheckRules()
 End Sub
 
-Protected Overrides Sub DataPortal_Insert()
-  ' TODO: insert object's data
+<Fetch> _
+Private Sub Fetch(ByVal id As $IdType$)
+  ' TODO: use DAL to load values into object
 End Sub
 
-Protected Overrides Sub DataPortal_Update()
-  ' TODO: update object's data
+<Insert> _
+Private Sub Insert()
+  ' TODO: use DAL to insert object's data
 End Sub
 
-Protected Overrides Sub DataPortal_DeleteSelf()
-  DataPortal_Delete(New SingleCriteria(Of $ObjectType$, $IdType$)(ReadProperty(Of $IdType$)($IdProperty$)))
+<Update> _
+Private Sub Update()
+  ' TODO: use DAL to update object's data
 End Sub
 
-Private Overloads Sub DataPortal_Delete(ByVal criteria As SingleCriteria(Of $ObjectType$, $IdType$))
-  ' TODO: delete object's data
+<DeleteSelf> _
+Private Sub DeleteSelf()
+  Delete(ReadProperty($IdProperty$))
 End Sub
 
-#End Region]]></Code>
+<Delete> _
+Private Shadows Sub Delete(ByVal id As $IdType$)
+  ' TODO: use DAL to delete object's data
+End Sub
+]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

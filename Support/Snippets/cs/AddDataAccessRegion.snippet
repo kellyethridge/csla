@@ -4,20 +4,15 @@
     <Header>
       <Title>Insert data access region</Title>
       <Author>Rockford Lhotka</Author>
-      <Description>Insert CSLA .NET data access region.</Description>
+      <Description>Insert CSLA .NET server-side dataportal methods.</Description>
       <Shortcut>csladata</Shortcut>
     </Header>
     <Snippet>
       <Declarations>
         <Literal>
-          <ID>ObjectType</ID>
-          <ToolTip>Replace with the business object type.</ToolTip>
-          <Default>BusinessType</Default>
-        </Literal>
-        <Literal>
           <ID>IdProperty</ID>
           <ToolTip>Replace with the Id property name.</ToolTip>
-          <Default>IdProperty</Default>
+          <Default>Id</Default>
         </Literal>
         <Literal>
           <ID>IdType</ID>
@@ -27,32 +22,43 @@
       </Declarations>
       <Code Language="CSharp">
   <![CDATA[
-private void DataPortal_Fetch($IdType$ id)
+[Create]
+private void Create()
 {
-  // TODO: load values into object
-  $end$
+  // TODO: initialize object values
+  BusinessRules.CheckRules();
 }
 
-protected override void DataPortal_Insert()
+[Fetch]
+private void Fetch($IdType$ id)
 {
-  // TODO: insert object's data
+  // TODO: call DAL to load values into object
 }
 
-protected override void DataPortal_Update()
+[Insert]
+private void Insert()
 {
-  // TODO: update object's data
+  // TODO: call DAL to insert object's data
 }
 
-protected override void DataPortal_DeleteSelf()
+[Update]
+private void Update()
 {
-  DataPortal_Delete(ReadProperty($IdProperty$Property));
+  // TODO: call DAL to update object's data
 }
 
-private void DataPortal_Delete($IdType$ id)
+[DeleteSelf]
+private void DeleteSelf()
 {
-  // TODO: delete object's data
+  Delete(ReadProperty($IdProperty$Property));
 }
-    ]]></Code>
+
+[Delete]
+private void Delete($IdType$ id)
+{
+  // TODO: call DAL to delete object's data
+}
+]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

@@ -8,7 +8,7 @@
     <authors>Marimer LLC</authors>
     <license type="expression">MIT</license>
     <projectUrl>https://cslanet.com/</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/MarimerLLC/csla/master/Support/Logos/csla.png</iconUrl>
+    <icon>images/csla.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>
 Supports the creation of Class Library projects containing business domain classes, Windows Services, Console applications and other native Windows application models.
@@ -20,7 +20,13 @@ Supports the creation of Class Library projects containing business domain class
     </summary>
     <language>en-US</language>
     <dependencies>
-      <group targetFramework="net46" />
+      <group targetFramework="net46">
+        <dependency id="Microsoft.Extensions.Configuration" version="2.2.0" />
+        <dependency id="Microsoft.Extensions.Configuration.Binder" version="2.2.4" />
+        <dependency id="System.ComponentModel.Annotations" version="4.6.0" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="2.2.0" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="2.2.0" />
+      </group>
       <group targetFramework="net45" />
       <group targetFramework="net40">
         <dependency id="Microsoft.Bcl.Async" version="1.0.165" />
@@ -29,22 +35,19 @@ Supports the creation of Class Library projects containing business domain class
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="NETStandard.Library" version="2.0.0" />
+        <dependency id="Microsoft.Extensions.Configuration" version="2.2.0" />
+        <dependency id="Microsoft.Extensions.Configuration.Binder" version="2.2.4" />
         <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
         <dependency id="System.Security.Principal" version="4.3.0" />
         <dependency id="System.Runtime.Serialization.Xml" version="4.3.0" />
         <dependency id="System.Threading.ThreadPool" version="4.3.0" />
         <dependency id="System.ComponentModel" version="4.3.0" />
         <dependency id="System.ComponentModel.Primitives" version="4.3.0" />
-        <dependency id="System.ComponentModel.Annotations" version="4.4.1" />
+        <dependency id="System.ComponentModel.Annotations" version="4.6.0" />
         <dependency id="System.Reflection" version="4.3.0" />
         <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />
-        <dependency id="System.Data.Common" version="4.3.0" />
-        <dependency id="System.Data.SqlClient" version="4.4.3" />
-        <dependency id="System.Buffers" version="4.5.0" />
-        <dependency id="Microsoft.Extensions.Configuration" version="2.1.1" />
-        <dependency id="Microsoft.Extensions.Configuration.Binder" version="2.1.1" />
-        <dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.1" />
-        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="2.1.1" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="2.2.0" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="2.2.0" />
       </group>
     </dependencies>
   </metadata>
@@ -72,8 +75,9 @@ Supports the creation of Class Library projects containing business domain class
     <file src="..\..\Bin\Release\NET46\**\Csla.resources.pdb*" target="lib\net461" />
     <file src="..\..\Bin\Release\NET46\**\Csla.xml*" target="lib\net461" />
     <!-- CSLA Analyzers -->
-    <file src="..\..\Bin\Release\Analyzers\**\Csla.Analyzers.dll*" target="analyzers\c#" />
-    <file src="..\..\Bin\Release\Analyzers\**\Csla.Analyzers.pdb*" target="analyzers\c#" />
-    <file src="..\..\Bin\Release\Analyzers\tools\*.ps1" target="tools\" />
+    <file src="..\..\bin\Release\netstandard\netstandard1.3\Csla.Analyzers.*" target="analyzers\c#" />
+    <file src="..\..\bin\Release\netstandard\netstandard1.3\tools\*.ps1" target="tools\" />
+    <!-- icon -->
+    <file src="..\..\Support\Logos\csla.png" target="images\" />
   </files>
 </package>

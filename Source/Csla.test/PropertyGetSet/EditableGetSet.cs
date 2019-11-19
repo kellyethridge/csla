@@ -53,7 +53,7 @@ namespace Csla.Test.PropertyGetSet
       set { SetPropertyConvert(F04Property, ref _F04, value); }
     }
 
-    private static Csla.PropertyInfo<bool> F05Property = RegisterProperty<bool>(c => c.F05, "field 5", RelationshipTypes.PrivateField);
+    private static Csla.PropertyInfo<bool> F05Property = RegisterProperty<bool>(nameof(F05), "field 5", false, RelationshipTypes.PrivateField);
     private bool _f05 = F05Property.DefaultValue;
     public bool F05
     {
@@ -61,7 +61,7 @@ namespace Csla.Test.PropertyGetSet
       set { SetProperty<bool>(F05Property, ref _f05, value); }
     }
 
-    private static Csla.PropertyInfo<object> F06Property = RegisterProperty<object>(c => c.F06, "field 6", RelationshipTypes.PrivateField);
+    private static Csla.PropertyInfo<object> F06Property = RegisterProperty<object>(c => c.F06, "field 6", null, RelationshipTypes.PrivateField);
     private object _F06 = string.Empty;
     public string F06
     {
@@ -69,11 +69,11 @@ namespace Csla.Test.PropertyGetSet
       set { SetPropertyConvert<object, string>(F06Property, ref _F06, value); }
     }
 
-    private static Csla.PropertyInfo<string> ManagedStringFieldProperty = RegisterProperty<string>(typeof(EditableGetSet), new Csla.PropertyInfo<string>("ManagedStringField"));
+    public static readonly PropertyInfo<string> ManagedStringFieldProperty = RegisterProperty<string>(nameof(ManagedStringField));
     public string ManagedStringField
     {
-      get { return GetProperty<string>(ManagedStringFieldProperty); }
-      set { SetProperty<string>(ManagedStringFieldProperty, value); }
+      get => GetProperty(ManagedStringFieldProperty);
+      set => SetProperty(ManagedStringFieldProperty, value);
     }
 
     public bool ManagedStringFieldDirty

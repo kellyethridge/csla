@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 
 namespace Csla.Analyzers.IntegrationTests
 {
@@ -6,18 +7,27 @@ namespace Csla.Analyzers.IntegrationTests
   public class SerializableArgumentTests
     : BusinessBase<SerializableArgumentTests>
   {
-    private void DataPortal_Fetch(int x) { }
+    [Fetch]
+    private void Fetch(int x) { }
 
-    private void DataPortal_Fetch(SerializedObject x) { }
+    [Fetch]
+    private void Fetch(SerializedObject x) { }
 
     // This should fail because it's not serializable.
-    private void DataPortal_Fetch(NonSerializedObject x) { }
+    [Fetch]
+    private void Fetch(NonSerializedObject x) { }
 
-    private void Child_Fetch(int x) { }
+    [Fetch]
+    private void FetchWithInject([Inject] NonSerializedObject x) { }
 
-    private void Child_Fetch(SerializedObject x) { }
+    [FetchChild]
+    private void FetchChild(int x) { }
 
-    private void Child_Fetch(NonSerializedObject x) { }
+    [FetchChild]
+    private void FetchChild(SerializedObject x) { }
+
+    [FetchChild]
+    private void FetchChild(NonSerializedObject x) { }
   }
 
   public class NonSerializedObject { }

@@ -3,6 +3,7 @@
 Basic information
 -----------------
 * [What is CSLA .NET?](What-is-CSLA-.NET.md)
+* [Sponsor CSLA .NET](https://github.com/sponsors/rockfordlhotka)
 * [CSLA .NET overview whitepaper](https://github.com/MarimerLLC/csla/raw/master/Support/magenic-white-paper-overview-of-csla.pdf)
 * [CSLA .NET home page](http://www.cslanet.com)
 * [Testimonials and Usage](Testimonials-and-Usage.md)
@@ -26,12 +27,12 @@ Contributing
 CSLA .NET is an open source project and we do accept contributions. Information for contributors and developers can be found here:
 
 * [Contribute to CSLA .NET](https://github.com/MarimerLLC/csla/blob/master/CONTRIBUTING.md)
-* [Developer information](Developer-information.md)
+* [Contributors](https://github.com/MarimerLLC/csla/graphs/contributors)
 
 External links
 --------------
 * [Rockford Lhotka home page](http://www.lhotka.net)
-* [Rockford Lhotka blog](http://www.lhotka.net/weblog/)
+* [Rockford Lhotka blog](https://blog.lhotka.net)
 * [Jonny Bekkum blog](https://jonnybekkum.wordpress.com/)
 * [CSLA .NET archive download page](http://www.lhotka.net/cslanet/download.aspx)
 * [Wikipedia page](http://en.wikipedia.org/wiki/CSLA_.NET)

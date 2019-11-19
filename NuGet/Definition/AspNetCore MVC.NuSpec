@@ -2,13 +2,13 @@
 <package>
   <metadata>
     <id>Csla.AspNetCore</id>
-    <title>CSLA .NET - AspNetCore MVC</title>
+    <title>CSLA .NET - AspNetCore</title>
     <tags>CSLA AspNetCore</tags>
     <version>4.6.3-Beta10</version>
     <authors>Marimer LLC</authors>
     <license type="expression">MIT</license>
     <projectUrl>https://cslanet.com/</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/MarimerLLC/csla/master/Support/Logos/csla.png</iconUrl>
+    <icon>images/csla.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>
 Supports the creation of AspNetCore applications.
@@ -22,13 +22,24 @@ Supports the creation of AspNetCore applications.
     <dependencies>
       <group targetFramework="netstandard2.0">
         <dependency id="Csla" version="[4.6.3-Beta10]" />
-        <dependency id="Microsoft.AspNetCore" version="2.0.2" />
-        <dependency id="Microsoft.AspNetCore.Mvc" version="2.0.3" />
+        <dependency id="Microsoft.AspNetCore.Mvc" version="2.2.0" />
+      </group>
+      <group targetFramework="netcoreapp3.0">
+        <dependency id="Csla" version="[4.6.3-Beta10]" />
+      </group>
+      <group targetFramework="netcoreapp3.1">
+        <dependency id="Csla" version="[4.6.3-Beta10]" />
       </group>
     </dependencies>
   </metadata>
   <files>
     <!-- NetStandard Assembly -->
-    <file src="..\..\bin\Release\netstandard\netstandard2.0\**\Csla.AspNetCore.Mvc.*" target="lib\netstandard2.0" />
+    <file src="..\..\bin\Release\netstandard\netstandard2.0\**\Csla.AspNetCore.*" target="lib\netstandard2.0" />
+    <!-- NetCore3.0 Assembly -->
+    <file src="..\..\bin\Release\netstandard\netcoreapp3.0\**\Csla.AspNetCore.*" target="lib\netcoreapp3.0" />
+    <!-- NetCore3.1 Assembly -->
+    <file src="..\..\bin\Release\netstandard\netcoreapp3.1\**\Csla.AspNetCore.*" target="lib\netcoreapp3.1" />
+    <!-- icon -->
+    <file src="..\..\Support\Logos\csla.png" target="images\" />
   </files>
 </package>

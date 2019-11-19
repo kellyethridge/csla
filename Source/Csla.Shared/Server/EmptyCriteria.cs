@@ -6,9 +6,6 @@
 // <summary>Empty criteria used by the data portal as a</summary>
 //-----------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Csla.Server
 {
@@ -18,6 +15,13 @@ namespace Csla.Server
   /// has no criteria.
   /// </summary>
   [Serializable]
-  public class EmptyCriteria : Csla.Core.MobileObject
-  { }
+  public sealed class EmptyCriteria : Csla.Core.MobileObject
+  {
+    private EmptyCriteria() { }
+
+    /// <summary>
+    /// Gets an instance of EmptyCriteria
+    /// </summary>
+    public static EmptyCriteria Instance { get; } = new EmptyCriteria();
+  }
 }

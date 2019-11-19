@@ -20,8 +20,6 @@ namespace Csla
   /// </summary>
   public static class DataPortal
   {
-    private static readonly EmptyCriteria EmptyCriteria = new EmptyCriteria();
-
     /// <summary>
     /// Raised by DataPortal before it starts
     /// setting up to call a server-side
@@ -64,7 +62,7 @@ namespace Csla
     /// <typeparam name="T">Specific type of the business object.</typeparam>
     /// <param name="criteria">Object-specific criteria.</param>
     /// <returns>A new object, populated with default values.</returns>
-    public static T Create<T>(object criteria)
+    public static T Create<T>(params object[] criteria)
     {
       var dp = new DataPortal<T>();
       return dp.Create(criteria);
@@ -79,7 +77,7 @@ namespace Csla
     /// <returns>A new object, populated with default values.</returns>
     public static T Create<T>()
     {
-      return Create<T>(EmptyCriteria);
+      return Create<T>(EmptyCriteria.Instance);
     }
 
     /// <summary>
@@ -111,7 +109,7 @@ namespace Csla
     public static void BeginCreate<T>(EventHandler<DataPortalResult<T>> callback)
       where T : IMobileObject
     {
-      BeginCreate<T>(DataPortal<T>.EmptyCriteria, callback, null);
+      BeginCreate<T>(EmptyCriteria.Instance, callback, null);
     }
 
     /// <summary>
@@ -131,7 +129,7 @@ namespace Csla
     public static void BeginCreate<T>(EventHandler<DataPortalResult<T>> callback, object userState)
       where T : IMobileObject
     {
-      BeginCreate<T>(DataPortal<T>.EmptyCriteria, callback, userState);
+      BeginCreate<T>(EmptyCriteria.Instance, callback, userState);
     }
 
     /// <summary>
@@ -204,7 +202,7 @@ namespace Csla
     /// <param name="criteria">
     /// Criteria describing the object to create.
     /// </param>
-    public static async Task<T> CreateAsync<T>(object criteria)
+    public static async Task<T> CreateAsync<T>(params object[] criteria)
     {
       DataPortal<T> dp = new DataPortal<T>();
       return await dp.CreateAsync(criteria);
@@ -217,7 +215,7 @@ namespace Csla
     /// <typeparam name="T">Specific type of the business object.</typeparam>
     /// <param name="criteria">Object-specific criteria.</param>
     /// <returns>An object populated with values from the database.</returns>
-    public static T Fetch<T>(object criteria)
+    public static T Fetch<T>(params object[] criteria)
     {
       var dp = new DataPortal<T>();
       return dp.Fetch(criteria);
@@ -231,7 +229,7 @@ namespace Csla
     /// <returns>An object populated with values from the database.</returns>
     public static T Fetch<T>()
     {
-      return Fetch<T>(EmptyCriteria);
+      return Fetch<T>(EmptyCriteria.Instance);
     }
 
     internal static object Fetch(Type objectType, object criteria)
@@ -255,7 +253,7 @@ namespace Csla
     public static void BeginFetch<T>(EventHandler<DataPortalResult<T>> callback)
       where T : IMobileObject
     {
-      BeginFetch<T>(DataPortal<T>.EmptyCriteria, callback, null);
+      BeginFetch<T>(EmptyCriteria.Instance, callback, null);
     }
 
     /// <summary>
@@ -275,7 +273,7 @@ namespace Csla
     public static void BeginFetch<T>(EventHandler<DataPortalResult<T>> callback, object userState)
       where T : IMobileObject
     {
-      BeginFetch<T>(DataPortal<T>.EmptyCriteria, callback, userState);
+      BeginFetch<T>(EmptyCriteria.Instance, callback, userState);
     }
 
     /// <summary>
@@ -349,7 +347,7 @@ namespace Csla
     /// <param name="criteria">
     /// Criteria describing the object to fetch.
     /// </param>
-    public static async Task<T> FetchAsync<T>(object criteria)
+    public static async Task<T> FetchAsync<T>(params object[] criteria)
       where T : IMobileObject
     {
       var dp = new DataPortal<T>();
@@ -444,7 +442,7 @@ namespace Csla
     /// immediate deletion of a specific object from the database.
     /// </summary>
     /// <param name="criteria">Object-specific criteria.</param>
-    public static void Delete<T>(object criteria)
+    public static void Delete<T>(params object[] criteria)
     {
       var dp = new DataPortal<T>();
       dp.Delete(criteria);
@@ -512,7 +510,7 @@ namespace Csla
     /// <param name="criteria">
     /// Criteria describing the object to delete.
     /// </param>
-    public static async Task DeleteAsync<T>(object criteria)
+    public static async Task DeleteAsync<T>(params object[] criteria)
       where T : IMobileObject
     {
       var dp = new DataPortal<T>();
@@ -639,6 +637,35 @@ namespace Csla
     }
 
     /// <summary>
+    /// Creates and initializes a new
+    /// child business object.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type of business object to create.
+    /// </typeparam>
+    public static async Task<T> CreateChildAsync<T>()
+    {
+      Server.ChildDataPortal portal = new Server.ChildDataPortal();
+      return await portal.CreateAsync<T>();
+    }
+
+    /// <summary>
+    /// Creates and initializes a new
+    /// child business object.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type of business object to create.
+    /// </typeparam>
+    /// <param name="parameters">
+    /// Parameters passed to child create method.
+    /// </param>
+    public static async Task<T> CreateChildAsync<T>(params object[] parameters)
+    {
+      Server.ChildDataPortal portal = new Server.ChildDataPortal();
+      return await portal.CreateAsync<T>(parameters);
+    }
+
+    /// <summary>
     /// Creates and loads an existing
     /// child business object.
     /// </summary>
@@ -668,6 +695,35 @@ namespace Csla
     }
 
     /// <summary>
+    /// Fetchs and initializes a new
+    /// child business object.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type of business object to Fetch.
+    /// </typeparam>
+    public static async Task<T> FetchChildAsync<T>()
+    {
+      Server.ChildDataPortal portal = new Server.ChildDataPortal();
+      return await portal.FetchAsync<T>();
+    }
+
+    /// <summary>
+    /// Fetchs and initializes a new
+    /// child business object.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type of business object to Fetch.
+    /// </typeparam>
+    /// <param name="parameters">
+    /// Parameters passed to child Fetch method.
+    /// </param>
+    public static async Task<T> FetchChildAsync<T>(params object[] parameters)
+    {
+      Server.ChildDataPortal portal = new Server.ChildDataPortal();
+      return await portal.FetchAsync<T>(parameters);
+    }
+
+    /// <summary>
     /// Inserts, updates or deletes an existing
     /// child business object.
     /// </summary>
@@ -694,6 +750,35 @@ namespace Csla
     {
       Server.ChildDataPortal portal = new Server.ChildDataPortal();
       portal.Update(child, parameters);
+    }
+
+    /// <summary>
+    /// Inserts, updates or deletes an existing
+    /// child business object.
+    /// </summary>
+    /// <param name="child">
+    /// Business object to update.
+    /// </param>
+    public static async Task UpdateChildAsync(object child)
+    {
+      Server.ChildDataPortal portal = new Server.ChildDataPortal();
+      await portal.UpdateAsync(child).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Inserts, updates or deletes an existing
+    /// child business object.
+    /// </summary>
+    /// <param name="child">
+    /// Business object to update.
+    /// </param>
+    /// <param name="parameters">
+    /// Parameters passed to child update method.
+    /// </param>
+    public static async Task UpdateChildAsync(object child, params object[] parameters)
+    {
+      Server.ChildDataPortal portal = new Server.ChildDataPortal();
+      await portal.UpdateAsync(child, parameters).ConfigureAwait(false);
     }
 
     private static DataPortalClient.IDataPortalProxyFactory _dataProxyFactory;

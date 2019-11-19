@@ -12,6 +12,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,6 +64,29 @@ namespace Csla.DataPortalClient
     }
 
     /// <summary>
+    /// Creates an instance of the object, initializing
+    /// it to use the supplied HttpClient object.
+    /// </summary>
+    /// <param name="httpClient">HttpClient instance</param>
+    public HttpProxy(HttpClient httpClient)
+    {
+      this.DataPortalUrl = HttpProxy.DefaultUrl;
+      _httpClient = httpClient;
+    }
+
+    /// <summary>
+    /// Creates an instance of the object, initializing
+    /// it to use the supplied HttpClient object and URL.
+    /// </summary>
+    /// <param name="httpClient">HttpClient instance</param>
+    /// <param name="dataPortalUrl">Server endpoint URL</param>
+    public HttpProxy(HttpClient httpClient, string dataPortalUrl)
+    {
+      _httpClient = httpClient;
+      DataPortalUrl = dataPortalUrl;
+    }
+
+    /// <summary>
     /// Gets a value indicating whether the data portal
     /// is hosted on a remote server.
     /// </summary>
@@ -93,15 +117,6 @@ namespace Csla.DataPortalClient
       }
 
       return _httpClient;
-    }
-
-    /// <summary>
-    /// Set HttpClient object for use by data portal.
-    /// </summary>
-    /// <param name="client">HttpClient instance.</param>
-    public static void SetHttpClient(HttpClient client)
-    {
-      _httpClient = client;
     }
 
     /// <summary>
@@ -174,7 +189,7 @@ namespace Csla.DataPortalClient
     /// <param name="isSync">True if the client-side proxy should synchronously invoke the server.</param>
     public async Task<DataPortalResult> Create(Type objectType, object criteria, DataPortalContext context, bool isSync)
     {
-      DataPortalResult result = null;
+      DataPortalResult result;
       try
       {
         var request = GetBaseCriteriaRequest();
@@ -231,7 +246,7 @@ namespace Csla.DataPortalClient
     public async Task<DataPortalResult> Fetch(Type objectType, object criteria, DataPortalContext context, bool isSync)
 #pragma warning restore 1998
     {
-      DataPortalResult result = null;
+      DataPortalResult result;
       try
       {
         var request = GetBaseCriteriaRequest();
@@ -287,7 +302,7 @@ namespace Csla.DataPortalClient
     public async Task<DataPortalResult> Update(object obj, DataPortalContext context, bool isSync)
 #pragma warning restore 1998
     {
-      DataPortalResult result = null;
+      DataPortalResult result;
       try
       {
         var request = GetBaseUpdateCriteriaRequest();
@@ -339,7 +354,7 @@ namespace Csla.DataPortalClient
     public async Task<DataPortalResult> Delete(Type objectType, object criteria, DataPortalContext context, bool isSync)
 #pragma warning restore 1998
     {
-      DataPortalResult result = null;
+      DataPortalResult result;
       try
       {
 
@@ -394,7 +409,7 @@ namespace Csla.DataPortalClient
     private async Task<byte[]> CallViaHttpClient(byte[] serialized, string operation, string routingToken)
     {
       HttpClient client = GetHttpClient();
-      HttpRequestMessage httpRequest = null;
+      HttpRequestMessage httpRequest;
       httpRequest = new HttpRequestMessage(
         HttpMethod.Post, 
         $"{DataPortalUrl}?operation={CreateOperationTag(operation, ApplicationContext.VersionRoutingTag, routingToken)}");
@@ -403,9 +418,9 @@ namespace Csla.DataPortalClient
       else
         httpRequest.Content = new ByteArrayContent(serialized);
       var httpResponse = await client.SendAsync(httpRequest);
-      httpResponse.EnsureSuccessStatusCode();
+      await VerifyResponseSuccess(httpResponse);
       if (UseTextSerialization)
-        serialized = System.Convert.FromBase64String(await httpResponse.Content.ReadAsStringAsync());
+        serialized = Convert.FromBase64String(await httpResponse.Content.ReadAsStringAsync());
       else
         serialized = await httpResponse.Content.ReadAsByteArrayAsync();
       return serialized;
@@ -426,6 +441,24 @@ namespace Csla.DataPortalClient
         serialized = result;
       }
       return serialized;
+    }
+
+    private static async Task VerifyResponseSuccess(HttpResponseMessage httpResponse)
+    {
+      if (!httpResponse.IsSuccessStatusCode)
+      {
+        var message = new StringBuilder();
+        message.Append(httpResponse.StatusCode);
+        message.Append(": ");
+        message.Append(httpResponse.ReasonPhrase);
+        var content = await httpResponse.Content.ReadAsStringAsync();
+        if (!string.IsNullOrWhiteSpace(content))
+        {
+          message.AppendLine();
+          message.Append(content);
+        }
+        throw new HttpRequestException(message.ToString());
+      }
     }
 
     private string CreateOperationTag(string operatation, string versionToken, string routingToken)

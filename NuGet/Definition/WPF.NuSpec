@@ -8,7 +8,7 @@
     <authors>Marimer LLC</authors>
     <license type="expression">MIT</license>
     <projectUrl>https://cslanet.com/</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/MarimerLLC/csla/master/Support/Logos/csla.png</iconUrl>
+    <icon>images/csla.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>
 Supports the creation of WPF applications.
@@ -20,10 +20,27 @@ Supports the creation of WPF applications.
     </summary>
     <language>en-US</language>
     <dependencies>
-      <dependency id="Csla" version="[4.6.3-Beta10]" />
+      <group targetFramework="net40">
+        <dependency id="Csla" version="[4.6.3-Beta10]" />
+      </group>
+      <group targetFramework="net45">
+        <dependency id="Csla" version="[4.6.3-Beta10]" />
+      </group>
+      <group targetFramework="net46">
+        <dependency id="Csla" version="[4.6.3-Beta10]" />
+      </group>
+      <group targetFramework="netcoreapp3.0">
+        <dependency id="Csla" version="[4.6.3-Beta10]" />
+      </group>
     </dependencies>
   </metadata>
   <files>
+     <!-- netcoreapp3.0 Assembly -->
+    <file src="..\..\bin\Release\netstandard\netcoreapp3.0\**\Csla.Xaml.dll*" target="lib\netcoreapp3.0" />
+    <file src="..\..\bin\Release\netstandard\netcoreapp3.0\**\Csla.Xaml.pdb*" target="lib\netcoreapp3.0" />
+    <file src="..\..\bin\Release\netstandard\netcoreapp3.0\**\Csla.Xaml.resources.dll*" target="lib\netcoreapp3.0" />
+    <file src="..\..\Bin\Release\netstandard\netcoreapp3.0\**\Csla.Xaml.resources.pdb*" target="lib\netcoreapp3.0" />
+    <file src="..\..\Bin\Release\netstandard\netcoreapp3.0\**\Csla.Xaml.xml*" target="lib\netcoreapp3.0" />
     <!-- .NET 4.0 Client -->
     <file src="..\..\Bin\Release\NET4\**\Csla.Xaml.dll*" target="lib\net40" />
     <file src="..\..\Bin\Release\NET4\**\Csla.Xaml.pdb*" target="lib\net40" />
@@ -44,5 +61,7 @@ Supports the creation of WPF applications.
     <file src="..\..\Bin\Release\NET46\**\Csla.Xaml.xml*" target="lib\net461" />
     <!-- Source Files for Symbol Server -->
     <!-- <file src="..\..\Source\**\Csla.Xaml*\**\*.cs" target="src" /> -->
+    <!-- icon -->
+    <file src="..\..\Support\Logos\csla.png" target="images\" />
   </files>
 </package>
