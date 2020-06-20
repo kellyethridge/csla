@@ -1,26 +1,23 @@
 using System;
-using System.Security.Principal;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Csla.Security;
+using Csla;
 
 namespace ProjectTracker.Library.Security
 {
-  [Serializable]
-  public class PTPrincipal : CslaClaimsPrincipal
+  public static class PTPrincipal
   {
-    public PTPrincipal()
-    { }
-
-    protected PTPrincipal(ICslaIdentity identity)
-      : base(identity)
-    { }
+    public static event Action NewUser;
 
     public static async Task LoginAsync(string username, string password)
     {
       try
       {
-        var identity = await PTIdentity.GetPTIdentityAsync(username, password);
-        SetPrincipal(identity);
+        var credentials = DataPortal.Create<Credentials>(username, password);
+        var validator = await DataPortal.FetchAsync<CredentialValidator>(credentials);
+        var principal = validator.GetPrincipal();
+        ApplicationContext.User = principal;
+        NewUser?.Invoke();
       }
       catch
       {
@@ -30,66 +27,12 @@ namespace ProjectTracker.Library.Security
 
     public static bool Login(string username, string password)
     {
-      var identity = PTIdentity.GetPTIdentity(username, password);
-      return SetPrincipal(identity);
-    }
-
-    public static bool Load(string username)
-    {
-      var current = Csla.ApplicationContext.User;
-      if (current != null && current.Identity != null && current.Identity.Name == username)
-        return true;
-
-      var fromCache = PrincipalCache.GetPrincipal(username);
-      if (fromCache != null)
-        return SetPrincipal(fromCache);
-
-      var identity = PTIdentity.GetPTIdentity(username);
-      return SetPrincipal(identity);
-    }
-
-    public static async Task<bool> LoadAsync(string username)
-    {
-      var current = Csla.ApplicationContext.User;
-      if (current != null && current.Identity != null && current.Identity.Name == username)
-        return true;
-
-      var fromCache = PrincipalCache.GetPrincipal(username);
-      if (fromCache != null)
-        return SetPrincipal(fromCache);
-
-      var identity = await PTIdentity.GetPTIdentityAsync(username);
-      return SetPrincipal(identity);
-    }
-
-    private static bool SetPrincipal(ICslaIdentity identity)
-    {
-      if (identity.IsAuthenticated)
-      {
-        PTPrincipal principal = new PTPrincipal(identity);
-        Csla.ApplicationContext.User = principal;
-        PrincipalCache.AddPrincipal(principal);
-      }
-      OnNewUser();
-      return identity.IsAuthenticated;
-    }
-
-    private static bool SetPrincipal(IPrincipal principal)
-    {
-      Csla.ApplicationContext.User = principal;
-      OnNewUser();
-      return principal.Identity.IsAuthenticated;
+      throw new NotSupportedException(nameof(Login));
     }
 
     public static void Logout()
     {
-      Csla.ApplicationContext.User = new UnauthenticatedPrincipal();
-      OnNewUser();
-    }
-
-    public static event Action NewUser;
-    private static void OnNewUser()
-    {
+      Csla.ApplicationContext.User = new ClaimsPrincipal(new ClaimsIdentity());
       NewUser?.Invoke();
     }
   }

@@ -13,6 +13,7 @@ namespace Csla.Blazor.Test.Fakes
     public static Csla.PropertyInfo<string> LastNameProperty = RegisterProperty<string>(nameof(LastName));
     public static Csla.PropertyInfo<string> HomeTelephoneProperty = RegisterProperty<string>(nameof(HomeTelephone));
     public static Csla.PropertyInfo<string> MobileTelephoneProperty = RegisterProperty<string>(nameof(MobileTelephone));
+    public static Csla.PropertyInfo<FakePersonEmailAddresses> EmailAddressesProperty = RegisterProperty<FakePersonEmailAddresses>(nameof(EmailAddresses));
 
     #region Properties 
 
@@ -43,6 +44,11 @@ namespace Csla.Blazor.Test.Fakes
       set { SetProperty(MobileTelephoneProperty, value); }
     }
 
+    public FakePersonEmailAddresses EmailAddresses
+    {
+      get { return GetProperty(EmailAddressesProperty); }
+    }
+
     #endregion
 
     #region Factory Methods
@@ -58,8 +64,29 @@ namespace Csla.Blazor.Test.Fakes
 
     protected override void AddBusinessRules()
     {
+      Csla.Rules.CommonRules.CommonBusinessRule rule;
       base.AddBusinessRules();
       BusinessRules.AddRule(new OneOfSeveralStringsRequiredRule(HomeTelephoneProperty, MobileTelephoneProperty));
+
+      // Add additional rules for warning severity level
+      rule = new Csla.Rules.CommonRules.MinLength(LastNameProperty, 2, "Last name is quite short!");
+      rule.Severity = Csla.Rules.RuleSeverity.Warning;
+      BusinessRules.AddRule(rule);
+
+      // Add additional rules for information severity level
+      rule = new Csla.Rules.CommonRules.MinLength(FirstNameProperty, 2, "First name is a bit short");
+      rule.Severity = Csla.Rules.RuleSeverity.Information;
+      BusinessRules.AddRule(rule);
+    }
+
+    protected override void OnChildChanged(Csla.Core.ChildChangedEventArgs e)
+    {
+      if (e.ChildObject is FakePersonEmailAddresses)
+      {
+        BusinessRules.CheckRules(EmailAddressesProperty);
+        OnPropertyChanged(EmailAddressesProperty);
+      }
+      base.OnChildChanged(e);
     }
 
     #endregion
@@ -70,6 +97,9 @@ namespace Csla.Blazor.Test.Fakes
     [Create]
     private void Create()
     {
+      // Create an empty list for holding email addresses
+      LoadProperty(EmailAddressesProperty, DataPortal.CreateChild<FakePersonEmailAddresses>());
+
       // Trigger object checks
       BusinessRules.CheckRules();
     }

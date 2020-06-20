@@ -142,7 +142,9 @@ namespace Csla.DataPortalClient
       var request = new Csla.Server.Hosts.HttpChannel.CriteriaRequest();
       request.CriteriaData = null;
       request.ClientContext = MobileFormatter.Serialize(ApplicationContext.ClientContext);
+#pragma warning disable CS0618 // Type or member is obsolete
       request.GlobalContext = MobileFormatter.Serialize(ApplicationContext.GlobalContext);
+#pragma warning restore CS0618 // Type or member is obsolete
       if (ApplicationContext.AuthenticationType == "Windows")
       {
         request.Principal = MobileFormatter.Serialize(null);
@@ -161,7 +163,9 @@ namespace Csla.DataPortalClient
       var request = new Csla.Server.Hosts.HttpChannel.UpdateRequest();
       request.ObjectData = null;
       request.ClientContext = MobileFormatter.Serialize(ApplicationContext.ClientContext);
+#pragma warning disable CS0618 // Type or member is obsolete
       request.GlobalContext = MobileFormatter.Serialize(ApplicationContext.GlobalContext);
+#pragma warning restore CS0618 // Type or member is obsolete
       if (ApplicationContext.AuthenticationType == "Windows")
       {
         request.Principal = MobileFormatter.Serialize(null);
@@ -448,7 +452,7 @@ namespace Csla.DataPortalClient
       if (!httpResponse.IsSuccessStatusCode)
       {
         var message = new StringBuilder();
-        message.Append(httpResponse.StatusCode);
+        message.Append((int)httpResponse.StatusCode);
         message.Append(": ");
         message.Append(httpResponse.ReasonPhrase);
         var content = await httpResponse.Content.ReadAsStringAsync();

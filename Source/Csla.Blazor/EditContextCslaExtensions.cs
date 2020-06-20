@@ -61,12 +61,16 @@ namespace Csla.Blazor
           nameof(editContext.Model), nameof(ICheckRules)));
       }
 
-      // Transfer results to the ValidationMessageStore
+      // Transfer broken rules of severity Error to the ValidationMessageStore
       messages.Clear();
-      foreach (var brokenRule in model.GetBrokenRules())
+      foreach (var brokenRuleNode in BusinessRules.GetAllBrokenRules(model))
       {
-        // Add a new message for each broken rule
-        messages.Add(new FieldIdentifier(model, brokenRule.Property), brokenRule.Description);
+        foreach (var brokenRule in brokenRuleNode.BrokenRules)
+        if (brokenRule.Severity == RuleSeverity.Error)
+        {
+          // Add a new message for each broken rule
+          messages.Add(new FieldIdentifier(brokenRuleNode.Object, brokenRule.Property), brokenRule.Description);
+        }
       }
 
       // Inform consumers that the state may have changed
@@ -85,22 +89,27 @@ namespace Csla.Blazor
       ICheckRules model;
 
       // Get access to the model via the required interface
-      model = editContext.Model as ICheckRules;
+      model = fieldIdentifier.Model as ICheckRules;
 
       // Check if the model was provided, and correctly cast
       if (model == null)
       {
-        throw new ArgumentException("Model is null, or does not implement ICheckRules!");
+        throw new ArgumentException(
+          string.Format(Csla.Properties.Resources.InterfaceNotImplementedException,
+          nameof(fieldIdentifier.Model), nameof(ICheckRules)));
       }
 
-      // Transfer any broken rules for the required property to the store
+      // Transfer any broken rules of severity Error for the required property to the store
       messages.Clear(fieldIdentifier);
       foreach (BrokenRule brokenRule in model.GetBrokenRules())
       {
-        if (fieldIdentifier.FieldName.Equals(brokenRule.Property))
+        if (brokenRule.Severity == RuleSeverity.Error)
         {
-          // Add a message for each broken rule on the property under validation
-          messages.Add(fieldIdentifier, brokenRule.Description);
+          if (fieldIdentifier.FieldName.Equals(brokenRule.Property))
+          {
+            // Add a message for each broken rule on the property under validation
+            messages.Add(fieldIdentifier, brokenRule.Description);
+          }
         }
       }
 

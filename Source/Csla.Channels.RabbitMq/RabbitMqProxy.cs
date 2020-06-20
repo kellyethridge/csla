@@ -346,7 +346,7 @@ namespace Csla.Channels.RabbitMq
     private async Task<byte[]> CallDataPortalServer(byte[] serialized, string operation)
     {
       var correlationId = Guid.NewGuid().ToString();
-      var resetEvent = new Csla.Reflection.AsyncManualResetEvent();
+      var resetEvent = new Csla.Threading.AsyncManualResetEvent();
       var wip = Wip.WorkInProgress.GetOrAdd(correlationId, new WipItem { ResetEvent = resetEvent });
 
       SendMessage(QueueListener.ReplyQueue.QueueName, correlationId, operation, serialized);
@@ -427,7 +427,9 @@ namespace Csla.Channels.RabbitMq
       {
         CriteriaData = null,
         ClientContext = MobileFormatter.Serialize(ApplicationContext.ClientContext),
+#pragma warning disable CS0618 // Type or member is obsolete
         GlobalContext = MobileFormatter.Serialize(ApplicationContext.GlobalContext)
+#pragma warning restore CS0618 // Type or member is obsolete
       };
       if (ApplicationContext.AuthenticationType == "Windows")
       {
@@ -448,7 +450,9 @@ namespace Csla.Channels.RabbitMq
       {
         ObjectData = null,
         ClientContext = MobileFormatter.Serialize(ApplicationContext.ClientContext),
+#pragma warning disable CS0618 // Type or member is obsolete
         GlobalContext = MobileFormatter.Serialize(ApplicationContext.GlobalContext)
+#pragma warning restore CS0618 // Type or member is obsolete
       };
       if (ApplicationContext.AuthenticationType == "Windows")
       {

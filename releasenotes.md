@@ -1,6 +1,75 @@
-# CSLA 5 releases
+﻿# CSLA 5 releases
 
-CSLA 5 is a big release with some breaking changes, some major enhancements, and with new support for .NET Core 3 and WebAssembly (Blazor, etc.).
+CSLA 5 includes major enhancements, and brings support for .NET Core 3 and WebAssembly (Blazor, Uno, etc.).
+
+# CSLA .NET version 5.2.0 release
+
+Enhancements related to Blazor, .NET core 3.1, and other good changes/fixes.
+
+## Change List
+
+[Changes in this release](https://github.com/MarimerLLC/csla/issues?q=is%3Aissue+is%3Aclosed+project%3AMarimerLLC%2Fcsla%2F16).
+
+### General
+
+* [#1498](https://github.com/MarimerLLC/csla/issues/1498) 🐜 Fix static initialization issue on "cold init" scenario
+* [#1541](https://github.com/MarimerLLC/csla/issues/1541) 🐜 LocalProxy won't initialize with HttpClient added as service
+* [#1539](https://github.com/MarimerLLC/csla/issues/1539) ⚠ Mark GlobalContext as obsolete (with warning)
+* [#1522](https://github.com/MarimerLLC/csla/issues/1522) 🐜 Fix Csla.Data.EntityFrameworkCore=> GetManager returning disposed DbContext object
+* [#1513](https://github.com/MarimerLLC/csla/issues/1513) 🎉 Improve exception info in MobileFormatter
+* [#1568](https://github.com/MarimerLLC/csla/issues/1568) 🎉 Add `LoadListMode` concept to collection types
+* [#1524](https://github.com/MarimerLLC/csla/issues/1524) 🎉 Add CheckRulesAsync method for checking rules
+* [#1590](https://github.com/MarimerLLC/csla/issues/1590) 🐜 `DataMapper` now honors `Browsable` attribute
+
+### Blazor
+
+* [#1509](https://github.com/MarimerLLC/csla/issues/1509) 🎉 Add a For clause to CslaValidationMessages in Blazor
+* [#1520](https://github.com/MarimerLLC/csla/issues/1520) 🐜 Fix Blazor Viewmodel GetPropertyInfo reference previous model property
+* [#1544](https://github.com/MarimerLLC/csla/issues/1544) ⚠ Remove PropertyName from Blazor CslaValidationMessages
+* [#1586](https://github.com/MarimerLLC/csla/issues/1586) ⚠ Move wasm dependencies to `Csla.Blazor.WebAssembly` package
+* [#1585](https://github.com/MarimerLLC/csla/issues/1585) ⚠ Change `RefreshAsync` to require data portal or factory method
+* [#1584](https://github.com/MarimerLLC/csla/issues/1584) 🎉 Add overload for `GetPropertyInfo` to accept expression
+
+### Xamarin and XAML
+
+* [#1570](https://github.com/MarimerLLC/csla/issues/1570) 🐜 Fix issue with PropertyInfo error/warn/info text
+
+### Windows Forms and WPF (.NET Core 3)
+
+* [#1454](https://github.com/MarimerLLC/csla/issues/1454) 🐜 Fix issue with `PropertyStatus` control
+* [#1548](https://github.com/MarimerLLC/csla/issues/1548) 🎉 Add UseCsla methods for Windows Forms and WPF
+
+### Build and Dev
+
+* [#1188](https://github.com/MarimerLLC/csla/issues/1188) 🎉 Add support for NuGet symbol server
+
+### Dependabot and NuGet dependencies
+
+* Bump Microsoft.* packages to 3.1.4
+* Bump Microsoft.AspNetCore.Components.WebAssembly to 3.2.0
+* Bump System.Data.SqlClient from 4.8.0 to 4.8.1
+* Bump Microsoft.Data.SqlClient 1.1.3
+* Bump Microsoft.NETCore.UniversalWindowsPlatform from 6.2.9 to 6.2.10
+* Bump System.Threading.Tasks.Extensions to 4.5.4
+* Bump System.Runtime.CompilerServices.Unsafe to 4.7.1
+* Bump Grpc.Net.Client to 2.28.0
+* Bump Google.Protobuf to 3.12.0
+* Bump Grpc.Tools to 2.28.1
+* Bump System.Buffers to 4.5.1
+* Bump System.Memory to 4.5.4
+* Bump System.Text.Encodings.Web from 4.7.0 to 4.7.1
+* Bump Microsoft.Bcl.AsyncInterfaces from 1.1.0 to 1.1.1
+* Bump Xamarin.Forms to 4.6.0.772
+
+## Contributors
+
+* [@jacojordaan](https://github.com/jacojordaan) WPF and .NET Core 3
+* [@thecakemonster](https://github.com/thecakemonster) Blazor
+* [@SachinPNikam](https://github.com/SachinPNikam) Entity Framework
+* [@BlagoCuljak](https://github.com/BlagoCuljak) WPF and Blazor
+* [@JasonBock](https://github.com/JasonBock) Analyzers
+
+---
 
 # CSLA .NET version 5.1.0 release
 
@@ -14,9 +83,16 @@ Highlights:
 
 ### Blazor
 
+* [#1443](https://github.com/MarimerLLC/csla/issues/1443) Changed `Csla.Blazor.PropertyInfo` to not be generic
+* [#1435](https://github.com/MarimerLLC/csla/issues/1435) Add authorization helpers for Blazor
+* [#1440](https://github.com/MarimerLLC/csla/issues/1440) Add `ModelPropertyChanged` event to `ViewModel`
+* [#1410](https://github.com/MarimerLLC/csla/issues/1410) Add ModelChanged/ModelChanging events to `ViewModel`
 * [#1371](https://github.com/MarimerLLC/csla/issues/1371) Ensure `Csla.Blazor` works on server-side code too
-* [#1309](https://github.com/MarimerLLC/csla/issues/1309) Add `CslaValidator` component for Blazor
-* [#1295](https://github.com/MarimerLLC/csla/issues/1295) Add severity support to `CslaValidator` component
+* [#1295](https://github.com/MarimerLLC/csla/issues/1295) [#1309](https://github.com/MarimerLLC/csla/issues/1309) [#1436](https://github.com/MarimerLLC/csla/issues/1436) Add `CslaValidator` component for Blazor
+
+### Authentication and Authorization
+
+* [#1409](https://github.com/MarimerLLC/csla/issues/1409) Updates to `CslaClaimsPrincipal`
 
 ### Razor and MVC
 
@@ -26,12 +102,21 @@ Highlights:
 
 ### Data Portal
 
+* [#1459](https://github.com/MarimerLLC/csla/issues/1459) Fix major perf issues with CSLA 5 data portal
+* [#1444](https://github.com/MarimerLLC/csla/issues/1444) `DataPortalException` now returns better data via `ErrorInfo`
+* [#1424](https://github.com/MarimerLLC/csla/issues/1424) Add `ApplicationContextManagerTls` type
+* [#1417](https://github.com/MarimerLLC/csla/issues/1417) Fix issue with context disappearing after async call
 * [#1387](https://github.com/MarimerLLC/csla/issues/1387) Improve exception messages from HttpProxy
 * [#1386](https://github.com/MarimerLLC/csla/issues/1386) Auto-create scoped DI service provider on data portal server
 * [#1332](https://github.com/MarimerLLC/csla/issues/1332) Factory data portal needs to support DI (via constructor injection)
 
+### Templates
+
+* [#752](https://github.com/MarimerLLC/csla/issues/752) Update NuGet templates package to work in VS 2017, 2019
+
 ### Analyzers
 
+* [#1441](https://github.com/MarimerLLC/csla/issues/1441) Fix bug with `BusinessRuleDoesNotUseAddMethods` analyzer
 * [#1348](https://github.com/MarimerLLC/csla/issues/1348) Analyzer: Operation attribute usage
 
 ### Examples
@@ -41,17 +126,28 @@ Highlights:
 
 ### Bug fixes
 
-* [#1400](https://github.com/MarimerLLC/csla/issues/1400) Fix issue with `ApplicationContext` and `LocalProxy`
+* [#1464](https://github.com/MarimerLLC/csla/issues/1464) `AmbiguousMatchException` no longer thrown due to method overrides
+* [#1400](https://github.com/MarimerLLC/csla/issues/1400) Fix issue with `ApplicationContext` and `LocalProxy` and losing local/global context values
 * [#1402](https://github.com/MarimerLLC/csla/issues/1402) Fix issue building CSLA in debug mode
 * [#1369](https://github.com/MarimerLLC/csla/issues/1369) Fix issues with `ApplicationContext` in netcore 3
 * [#1360](https://github.com/MarimerLLC/csla/issues/1360) Fix issue with `DbContext` in .NET Core 3
 
 ### Dependabot and NuGet dependencies
 
-* Bump Microsoft.Data.SqlClient from 1.0.19249.1 to 1.0.19269.1
-* Bump Xamarin.Forms from 4.2.0.815419 to 4.3.0.947036
-* Bump Google.Protobuf from 3.9.2 to 3.10.1
-* Bump Grpc.Net.Client from 2.24.0 to 2.25.0
+* Bump Microsoft.Extensions.DependencyInjection to 3.1.1
+* Bump Microsoft.Extensions.DependencyInjection.Abstractions to 3.1.1
+* Bump Microsoft.AspNetCore.Components.Web from 3.0.0 to 3.1.1
+* Bump Microsoft.AspNetCore.Components from 3.0.0 to 3.1.1
+* Bump System.Configuration.ConfigurationManager from 4.6.0 to 4.7.0
+* Bump System.ComponentModel.Annotations from 4.6.0 to 4.7.0
+* Bump System.Security.Permissions from 4.6.0 to 4.7.0
+* Bump System.Security.AccessControl from 4.6.0 to 4.7.0
+* Bump System.Security.Principal from 4.6.0 to 4.7.0
+* Bump System.Data.SqlClient from 4.7.0 to 4.8.0
+* Bump Microsoft.Data.SqlClient from 1.0.19249.1 to 1.1.1
+* Bump Xamarin.Forms to 4.6.800
+* Bump Google.Protobuf from 3.9.2 to 3.11.4
+* Bump Grpc.Net.Client from 2.24.0 to 2.28.0
 * Bump Microsoft.CodeAnalysis.Analyzers from 2.9.4 to 2.9.7
 
 ## Contributors
@@ -61,6 +157,11 @@ Highlights:
 * [@JasonBock](https://github.com/JasonBock) lots of work with the analyzers
 * [@skeeler88](https://github.com/skeeler88) bug fixes
 * [@bradtwurst](https://github.com/bradtwurst) bug fixes
+* [@jeddytier4](https://github.com/jeddytier4) got the NuGet templates package working again
+* [@j055](https://github.com/j055) helped figure out and fix the local/global context issue
+* [@Eduardo-Micromust](https://github.com/Eduardo-Micromust) found and fixed numerous method calling issues
+* [@linkerro](https://github.com/linkerro) fixed some NuGet package reference issues
+* [@SachinPNikam](https://github.com/SachinPNikam) updated the Blazor samples
 
 ---
 
